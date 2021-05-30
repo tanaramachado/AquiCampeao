@@ -12,9 +12,12 @@ namespace CampeonatoAquiCampeao.Service
     public class PartidaService : IPartidaService
     {
         private IPartidaRepository _partidaRepository;
-        public PartidaService(IPartidaRepository partidaRepository)
+        private IClubeRepository _clubeRepository;
+
+        public PartidaService(IPartidaRepository partidaRepository, IClubeRepository clubeRepository)
         {
             _partidaRepository = partidaRepository;
+            _clubeRepository = clubeRepository;
         }
         public List<PartidaResponse> Listar()
         {
@@ -111,6 +114,80 @@ namespace CampeonatoAquiCampeao.Service
                 return new BaseResponse() { StatusCode = 400, Mensagem = "Id Precisa ser preenchido" };
             _partidaRepository.Deletar(Id);
             return new BaseResponse() { StatusCode = 200 };
+        }
+        public List<ClassificacaoResponse> Classificacao()
+        {
+           List<ClassificacaoResponse> classificacao = new List<ClassificacaoResponse>();
+           ClassificacaoResponse c = new ClassificacaoResponse();
+            var clubes = _clubeRepository.Listar();
+
+            int vitorias;
+            int derrotas;
+            int empates;
+            int saldoGols;
+            int pontos;
+
+            foreach (var clube in clubes)
+            {
+                vitorias = 0;
+                derrotas = 0;
+                empates = 0;
+                saldoGols = 0;
+                pontos = 0;
+
+                var partidas = _partidaRepository.ListarClassificacao(clube.Id);
+
+                foreach (var partida in partidas)
+                {
+                    if (clube.Id == partida.IdMandante)
+                    {
+                        saldoGols += partida.GolsMandante;
+                        if (partida.GolsMandante > partida.GolsVisitante)
+                        {
+                            vitorias += 1;
+                            pontos += 3;
+                        }
+                        else if (partida.GolsMandante < partida.GolsVisitante)
+                        {
+                            derrotas += 1;
+                        }
+                        else
+                        {
+                            empates += 1;
+                            pontos += 1;
+                        }
+                    }
+                    else
+                    {
+                        saldoGols += partida.GolsVisitante;
+                        if (partida.GolsVisitante > partida.GolsMandante)
+                        {
+                            vitorias += 1;
+                            pontos += 3;
+                        }
+                        else if (partida.GolsVisitante < partida.GolsMandante)
+                        {
+                            derrotas += 1;
+
+                        }
+                        else
+                        {
+                            empates += 1;
+                            pontos += 1;
+                        }
+                    }
+                }
+                c = new ClassificacaoResponse();
+                c.Pontos = pontos;
+                c.SaldoGols = saldoGols;
+                c.Vitoria = vitorias;
+                c.Derrota = derrotas;
+                c.Empate = empates;
+                c.IdClube = clube.Id;
+                c.NomeClube = clube.Nome;
+                classificacao.Add(c);
+            }
+            return classificacao;
         }
     }
 }

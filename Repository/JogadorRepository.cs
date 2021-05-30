@@ -8,11 +8,10 @@ using CampeonatoAquiCampeao.Interface;
 
 namespace CampeonatoAquiCampeao.Repository
 {
-    public class JogadorRepository : IJogadorRepository
+    public class JogadorRepository : BaseRepository, IJogadorRepository
 
     {
-        public string _connectionString = "Server=DANILO\\SQLEXPRESS; Database=AquiCampeao;Trusted_Connection=True;";
-
+       
         public List<Jogador> Listar()
         {
             string query = @"SELECT [Id]

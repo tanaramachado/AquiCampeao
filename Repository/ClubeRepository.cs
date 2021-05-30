@@ -10,10 +10,9 @@ using CampeonatoAquiCampeao.Interface;
 
 namespace CampeonatoAquiCampeao.Repository
 {
-    public class ClubeRepository : IClubeRepository
+    public class ClubeRepository : BaseRepository ,  IClubeRepository
     {
-        public string _connectionString = "Server=DANILO\\SQLEXPRESS; Database=AquiCampeao;Trusted_Connection=True;";
-
+        
         public List<Clube> Listar()
         {
             string query = @"SELECT [Id]

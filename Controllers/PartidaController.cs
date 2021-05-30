@@ -53,5 +53,11 @@ namespace CampeonatoAquiCampeao.Controllers
             var response = _partidaService.Deletar(Id);
             return new ObjectResult(response) { StatusCode = response.StatusCode };
         }
+        [HttpGet("listarClassificacao")]
+        public IActionResult Classificacao()
+        {
+            var response = _partidaService.Classificacao();
+            return new ObjectResult(response) { StatusCode = 200 };
+        }
     }
 }

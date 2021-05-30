@@ -8,10 +8,9 @@ using CampeonatoAquiCampeao.Interface;
 
 namespace CampeonatoAquiCampeao.Repository
 {
-    public class PartidaRepository : IPartidaRepository
+    public class PartidaRepository : BaseRepository , IPartidaRepository
     {
-        public string _connectionString = "Server=DANILO\\SQLEXPRESS; Database=AquiCampeao;Trusted_Connection=True;";
-
+        
         public List<Partida> Listar()
         {
             string query = @"SELECT [Id]
@@ -20,6 +19,8 @@ namespace CampeonatoAquiCampeao.Repository
                                    ,[Data]
                                    ,[GolsVisitante]
                                    ,[GolsMandante]
+
+
                             FROM    [Partida]";
 
             SqlConnection conn = new SqlConnection(_connectionString);
@@ -88,5 +89,23 @@ namespace CampeonatoAquiCampeao.Repository
             conn.Open();
             conn.Execute(query, new { Id });
         }
+        public List<Partida> ListarClassificacao(int IdClube)
+        {
+            string query = @"SELECT
+                                    [Id]
+                                   ,[IdVisitante]
+                                   ,[IdMandante]
+                                   ,[Data]
+                                   ,[GolsVisitante]
+                                   ,[GolsMandante]      
+                               FROM Partida
+                              WHERE IdMandante = @IdClube
+                                 OR IdVisitante = @IdClube";
+            SqlConnection conn = new SqlConnection(_connectionString);
+            conn.Open();
+            return conn.Query<Partida>(query, new { IdClube }).ToList();
+        }
     }
 }
+
+

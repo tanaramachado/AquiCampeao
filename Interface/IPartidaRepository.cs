@@ -13,5 +13,6 @@ namespace CampeonatoAquiCampeao.Interface
         Partida Obter(int Id);
         void Atualizar(Partida partida);
         void Deletar(int Id);
+        List<Partida> ListarClassificacao(int IdClube);
     }
 }

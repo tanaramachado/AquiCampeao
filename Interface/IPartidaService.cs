@@ -13,6 +13,7 @@ namespace CampeonatoAquiCampeao.Interface
         PartidaResponse Obter(int id);
         BaseResponse Atualizar(PartidaRequest request);
         BaseResponse Deletar(int Id);
+        List<ClassificacaoResponse> Classificacao();
 
     }
 }
